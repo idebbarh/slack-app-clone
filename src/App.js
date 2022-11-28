@@ -9,6 +9,7 @@ import { selectIsChannelFormOpen } from './features/channelSlice';
 import {
   BrowserRouter,
 } from "react-router-dom";
+import MainContents from './components/MainContents';
 function App() {
   const isChannelFormOpen = useSelector(selectIsChannelFormOpen);
   return (
@@ -17,6 +18,7 @@ function App() {
           <Header/>
           <AppBodyContainer>
               <SideBar/>
+              <MainContents/>
           </AppBodyContainer>
           {isChannelFormOpen && <CreateNewChannelForm/>}
         </div>

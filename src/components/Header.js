@@ -23,7 +23,7 @@ function Header() {
             <HeaderIcon>
                 <HelpOutlineIcon/>
             </HeaderIcon>
-            <HeaderAvatar src='' sx={{ width: 30, height: 30 }}>
+            <HeaderAvatar src='' sx={{ width: 28, height: 28 }} variant="rounded">
                 I
                 <FiberManualRecordIcon/>
             </HeaderAvatar>
@@ -107,8 +107,8 @@ const HeaderAvatar = styled(Avatar)`
     }
     > .MuiSvgIcon-root{
         position: absolute;
-        right: -3px;
-        bottom: -2px;
+        right: -5px;
+        bottom: -5px;
         font-size: 18px;
         color: green;
     }
