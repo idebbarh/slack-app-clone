@@ -20,16 +20,17 @@ import AddIcon from '@mui/icons-material/Add';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useDispatch } from 'react-redux';
-import { openCreateChannelForm } from '../features/channelSlice';
+import { openCreateChannelForm, setChannelName } from '../features/channelSlice';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
+import { useNavigate } from 'react-router';
 
 function SideBar() {
     const [isHiddenOptionsOpen,setIsHiddenOptionsOpen] = useState(false);
     const [isChannelsListOpen,setIsChannelsListOpen] = useState(true);
     const [channels,setChannels] = useState([]);
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     useEffect(()=>{
         const q = query(collection(db,'channels'),orderBy('timestamp','asc'));
         onSnapshot(q,querySnapshot=>{
@@ -38,6 +39,16 @@ function SideBar() {
             }))
         })
     },[])
+
+    useEffect(()=>{
+            channels.forEach(channel=>{
+                if(channel.isActive){
+                    const docId = channel.id;
+                    dispatch(setChannelName(channel.name));
+                    navigate(docId);
+                }
+            })
+    },[channels])
   return (
     <SideBarContainer>
         <SideBarHeader>
@@ -66,7 +77,7 @@ function SideBar() {
         <SideBarChannelsContainer>
             <SideBarOption Icon={isChannelsListOpen ? ExpandMoreIcon : ExpandLessIcon} title='channels' isHidden={false} extraIcons={[MoreVertIcon,AddIcon]} setIsChannelsListOpen={setIsChannelsListOpen}/>
             <ChannelsList>
-                {channels.map((channel,index)=>{
+                {channels.map(channel=>{
                     return <SideBarOption Icon={TagIcon} title={channel.name} isHidden={false} isChannel={true} key={channel.id} isActive={channel.isActive} setChannels={setChannels} channelId={channel.id}/>
                 }).filter((channel)=> {
                     return isChannelsListOpen || channel.props.isActive

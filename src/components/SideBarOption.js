@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { setChannelName } from "../features/channelSlice";
 
 function SideBarOption({
   Icon,
@@ -16,6 +18,7 @@ function SideBarOption({
 }) {
   const [isExtraIconsHidden, setIsExtraIconsHidden] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectChannelHandler = ()=>{
               setChannels((prevState) =>
                 prevState.map((channel) =>
@@ -24,7 +27,8 @@ function SideBarOption({
                     : { ...channel, isActive: false }
                 )
               )
-            navigate(`/${channelId}`)
+            dispatch(setChannelName(title));
+            navigate(`${channelId}`)
   }
   return (
     <OptionContainer

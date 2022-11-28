@@ -76,6 +76,9 @@ const HeaderForm = styled.form`
     padding: 3px 10px;
     color: var(--white-color);
     gap: 3px;
+    @media (max-width: 901px) {
+      width: 100%;
+    }  
     > input{
         flex: 1;
         background-color: transparent;

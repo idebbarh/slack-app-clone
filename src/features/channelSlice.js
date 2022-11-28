@@ -1,11 +1,12 @@
-import {createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isChannelFormOpen:false,
+  isChannelFormOpen: false,
+  channelName: "",
 };
 
 export const channelSlice = createSlice({
-  name: 'channel',
+  name: "channel",
   initialState,
   reducers: {
     openCreateChannelForm: (state) => {
@@ -14,9 +15,18 @@ export const channelSlice = createSlice({
     closeCreateChannelForm: (state) => {
       state.isChannelFormOpen = false;
     },
-  }
+    setChannelName: (state, action) => {
+      state.channelName = action.payload;
+    },
+  },
 });
 
-export const { openCreateChannelForm,closeCreateChannelForm } = channelSlice.actions;
-export const selectIsChannelFormOpen = (state) => state.channel.isChannelFormOpen;
+export const {
+  openCreateChannelForm,
+  closeCreateChannelForm,
+  setChannelName,
+} = channelSlice.actions;
+export const selectIsChannelFormOpen = (state) =>
+  state.channel.isChannelFormOpen;
+export const selectChannelName = (state) => state.channel.channelName;
 export default channelSlice.reducer;
