@@ -61,10 +61,15 @@ function timeConverter(UNIX_timestamp) {
 function MainContents() {
   const [messageValue, setMessageValue] = useState("");
   const [channelMessages, setChannelMessages] = useState([]);
-  const mainContainerRef = useRef();
   const location = useLocation();
   const channelName = useSelector(selectChannelName);
   const userInfo = useSelector(selectUserInfo);
+  const lastMsgElem = useRef(null);
+  useEffect(()=>{
+    if(lastMsgElem.current){
+        lastMsgElem.current.scrollIntoView({behavior:'smooth'})
+    }
+  },[channelMessages])
   useEffect(() => {
     if (location.pathname !== "/") {
       const channelDocIc = location.pathname.slice(1);
@@ -79,16 +84,9 @@ function MainContents() {
       });
     }
   }, [location]);
-
   const sendMessageHandler = (e) => {
     e.preventDefault();
     if (messageValue.length > 0) {
-      if (mainContainerRef.current) {
-        mainContainerRef.current.scrollTo(
-          0,
-          mainContainerRef.current.scrollHeight
-        );
-      }
       const channelDocIc = location.pathname.slice(1);
       addDoc(collection(doc(db, "channels", channelDocIc), "messages"), {
         message: messageValue,
@@ -100,7 +98,7 @@ function MainContents() {
       setMessageValue("");
     }
   };
-  const messagesElem = channelMessages.map((message) => {
+  const messagesElem = channelMessages.map((message,index) => {
     const time = timeConverter(message.timestamp && message.timestamp.seconds);
     return (
       <MessageContainer key={message.id}>
@@ -127,7 +125,7 @@ function MainContents() {
     );
   });
   return (
-    <MainContentsContainer ref={mainContainerRef}>
+    <MainContentsContainer>
       <MainContentsHeader>
         <ChannelName>
           <TagIcon />
@@ -153,7 +151,10 @@ function MainContents() {
           </button>
         </WarningInfo>
       </WarningMessageContainer>
-      <MainContentsMessagesList>{messagesElem}</MainContentsMessagesList>
+      <MainContentsMessagesList>
+            {messagesElem}
+            <ScrollElem ref={lastMsgElem}/>
+        </MainContentsMessagesList>
       <MainContentsNewMessageContainer>
         <NewMessageForm>
           <FormHeader>
@@ -395,3 +396,7 @@ const FormSubmit = styled.button`
       props.messageValue.length > 0 ? "var(--white-color)" : "gray"};
   }
 `;
+
+const ScrollElem = styled.div`
+    width: 100%;
+`
