@@ -19,11 +19,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openCreateChannelForm, setChannelName } from '../features/channelSlice';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { useNavigate } from 'react-router';
+import { selectUserInfo } from '../features/userSlice';
 
 function SideBar() {
     const [isHiddenOptionsOpen,setIsHiddenOptionsOpen] = useState(false);
@@ -31,6 +32,7 @@ function SideBar() {
     const [channels,setChannels] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userInfo = useSelector(selectUserInfo)
     useEffect(()=>{
         const q = query(collection(db,'channels'),orderBy('timestamp','asc'));
         onSnapshot(q,querySnapshot=>{
@@ -53,7 +55,7 @@ function SideBar() {
     <SideBarContainer>
         <SideBarHeader>
             <SideBarUserInfo>
-                username
+                <span>{userInfo.displayName}</span>
                 <KeyboardArrowDownIcon/>
             </SideBarUserInfo>
             <AddCircleOutlineIcon/>
@@ -129,10 +131,16 @@ const SideBarHeader = styled.div`
 const SideBarUserInfo = styled.div`
     display: flex;
     align-items: center;
-    font-size: 21px;
+    font-size: 20px;
     font-weight: bold;
+    overflow: hidden;
     > .MuiSvgIcon-root{
         font-size: 18px;
+    }
+    > span{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 `
 
